@@ -2,7 +2,7 @@
 
 This is a minimalist set of intructions for running the equivalent of 'Hello World' with [nextflow](https://www.nextflow.io/docs/) at Fred Hutch. 
 
-## Install nextflow on a linux or OSX system.
+## Install nextflow
 
 Nextflow can be used on any POSIX compatible system (Linux, OS X, etc). It requires Bash 3.2 (or later) and [Java 8 (or later, up to 11)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed.
 
@@ -270,7 +270,7 @@ In most real world cases you will run a nextflow workflow directly from a github
 if running locally:
 
 ```
-nextflow run kmayerb/hello-nextflow -c configs/local.config
+nextflow run kmayerb/hello-nextflow -c configs/local.config -process.echo
 ```
 
 or with AWS batch:

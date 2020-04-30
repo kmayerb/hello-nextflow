@@ -1,12 +1,24 @@
 # hello-nextflow
 
-## Run Local
+This is minimalist set of intructions for running the equivalent of 'Hello World' with [nextflow](https://www.nextflow.io/docs/) at Fred Hutch. 
+
+## Install nextflow on a linux or OSX system.
+
+Nextflow can be used on any POSIX compatible system (Linux, OS X, etc). It requires Bash 3.2 (or later) and [Java 8 (or later, up to 11)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) to be installed.
+
+Install nextflow with the following bash command:
+
+```
+wget -qO- https://get.nextflow.io | bash
+```
+
+## Run the hello.nf workflow locally
 
 ```bash
 nextflow run workflows/hello.nf -c configs/local.config -process.echo
 ```
 
-## Run on the Cloud
+##  Run the hello.nf workflow using AWS batch
 
 Note: you must make two tweaks to the aws.config compared to what is in this repository
 
@@ -15,15 +27,21 @@ Note: you must make two tweaks to the aws.config compared to what is in this rep
 3. You should create a work directory in an S3 bucket you control. In the example below, we used `s3://fh-pi-Simpson-M/scratch/testwork/`.
 4. You need to specify where in your bucket the results should be published
 
-Note: `--` is used for passing params to the workflow while `-` is used for specifying nextflow settings. 
-
 ```bash
 nextflow run workflows/hello.nf \
 	--pub-dir s3://fh-pi-Simpson-M/scratch/testpub \
 	-c configs/aws.config \
 	-work-dir s3://fh-pi-Simpson-M/scratch/testwork \
-	-process.echo \
+	-process.echo 
 ```
+
+Note: `--` is used for passing params to the workflow while `-` is used for specifying nextflow settings. 
+
+* `--pub_dir` argument is specific to this workflow and controls where the outputs of the process will be saved
+* `-c` specificies the path to the config you wish to use
+* `-work-dir` specifies were the cached intermediate steps in your workflow will be saved
+* `-process.echo` optionally prints the stdout as nextflow executes. This is primarily a debugging tool.
+
 
 Instead of using the commandline it is good practice to save your runs as a bash script. See `runs/run_hello.sh`.
 

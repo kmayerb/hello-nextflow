@@ -27,6 +27,12 @@ Note: you must make two tweaks to the aws.config compared to what is in this rep
 3. You should create a work directory in an S3 bucket you control. In the example below, we used `s3://fh-pi-Simpson-M/scratch/testwork/`.
 4. You need to specify where in your bucket the results should be published
 
+if running on the shared cluster or gizmos:
+
+```bash
+ml nextflow
+```
+
 ```bash
 nextflow run workflows/hello.nf \
 	--pub-dir s3://fh-pi-Simpson-M/scratch/testpub \
@@ -145,9 +151,9 @@ process my_first_process {
 * publishDir - the path were outputs from this process will be written. 
 
 
-# Advant
+# More Detailed Configs
 
-### Advanced Example: update your config to make use of label
+### Example 1: update your config to make use of label
 
 ```
 process.queue = 'cpu-spot-30'
@@ -181,7 +187,7 @@ process {
 Note: all processes with the label 'low_mem' will only request 1 CPU and 1GB memory. 
 This can be very useful if you need to specify different computational resources for different sets of processes. 
 
-### Advanced Example 2: update your config to make use retry strategies and incremental resource escalation. 
+### Example 2: update your config to make use of retry strategies and escalating resource allocation. 
 
 ```
 process.queue = 'cpu-spot-30'
@@ -213,7 +219,6 @@ process {
 ```
 
 Note: in this case we specify that if the process fail, it should try again but with 1 GB more memory for each attempt. If you do this you must set the maxRetries to some reasonable number (e.g., 3).
-
 
 
 ## Doing the same thing using nexflow DSL2

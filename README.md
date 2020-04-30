@@ -20,7 +20,7 @@ nextflow run workflows/hello.nf -c configs/local.config -process.echo
 
 ##  Run the hello.nf workflow using AWS batch
 
-Note: you must make two tweaks to the aws.config compared to what is in this repository
+Note: you must make two tweaks to the`aws.config` compared to what is in this repository.
 
 1. Change `IAM` to your actual AWS Identity and Access Management code, which will be something like `97478097478`
 2. Change for `ROLE` to your compsci assigned roel, which will be soemthing like `fh-pi-Simpson-M-batchtask`
@@ -72,6 +72,41 @@ Duration    : 1m 5s
 CPU hours   : (a few seconds)
 Succeeded   : 1
 ```
+
+## Is anything happening.
+
+Some times you might just see this:
+
+```
+N E X T F L O W  ~  version 20.01.0
+Launching `workflows/hello.nf` [elegant_ride] - revision: 808173e715
+executor >  awsbatch (1)
+[84/48b400] process > my_first_process [  0%] 0 of 1
+```
+
+Is anything happening? There is a quick way to check if your job is just waiting its turn politely:
+
+```bach
+ml awscli
+aws batch list-jobs --job-queue cpu-spot-20 --job-status RUNNABLE | grep -A 1 -B 1 my_first_process
+```
+
+
+If your job is waiting in the queue you should see this:
+```
+"jobId": "2fc08c20-6a53-496a-ad2b-0ad1efc335e0",
+"jobName": "my_first_process_my_first_process",
+"createdAt": 1588285195665,
+```
+
+You can find more info on your specific job, by typing the following using hte jobID from above
+
+```bash
+aws batch describe-jobs --jobs 2fc08c20-6a53-496a-ad2b-0ad1efc335e0
+```
+
+You can also check the status of the queues on the [Dashboard](https://batch-dashboard.fhcrc.org/). Even if a queue is not full, if you chose a spot queue the current spot pricing may not allow the job to be run immediately. If the jobs shows as runnable, go get a cup of coffee and check back on it later.
+
 
 ## Getting Setup to Run on the Cloud
 

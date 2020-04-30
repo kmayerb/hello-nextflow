@@ -1,6 +1,6 @@
 # hello-nextflow
 
-This is minimalist set of intructions for running the equivalent of 'Hello World' with [nextflow](https://www.nextflow.io/docs/) at Fred Hutch. 
+This is a minimalist set of intructions for running the equivalent of 'Hello World' with [nextflow](https://www.nextflow.io/docs/) at Fred Hutch. 
 
 ## Install nextflow on a linux or OSX system.
 
@@ -45,8 +45,13 @@ Note: `--` is used for passing params to the workflow while `-` is used for spec
 
 Instead of using the commandline it is good practice to save your runs as a bash script. See `runs/run_hello.sh`.
 
+Then, the workflow is invoked by:
 
-Hello world spun up and was finished in less than 2 minutes.
+```bash
+bash runs/run_hello.sh
+```
+
+Our hello world spun up and was finished in less than 2 minutes.
 
 ```
 N E X T F L O W  ~  version 19.10.0
@@ -99,3 +104,45 @@ tower {
   enabled = true
 }
 ```
+
+
+## A Couple of Additional Things we can learn from even this simple 1-Part workflow:
+
+
+```groovy
+params.pub_dir = "results"
+
+my_first_channel = Channel.from("Hello World")
+
+process my_first_process {
+	tag 'my_first_process'
+
+	label 'low_mem'
+
+	container 'ubuntu:18.04'
+
+	publishDir params.pub_dir
+	
+	input:
+	val x from my_first_channel
+
+	output:
+	path 'message.txt' into result
+
+	script:
+	"""
+	echo $x 
+	echo $x > 'message.txt'
+	"""
+}
+```
+
+* tag - using a tag allows one to provide more context 
+* label - using a label allows one to control the amount of resources to allocate to all processes with that label. In nextflow resources can be specified to process or labels.
+* container - this specifies the docker image that will serve as as the environment for this process. Each process can have its own container.
+
+
+## Doing the same thing using nexflow DSL2
+
+Rewriting the Hello World using DSL2 is left as an exercise for the curious reader. 
+

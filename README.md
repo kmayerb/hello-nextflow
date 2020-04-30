@@ -115,7 +115,7 @@ Even if your specified queue is not full, if you chose a spot queue and the curr
 If your jobs shows up as runnable, go get a cup of coffee and check back on it later.
 
 
-## Getting Setup to Run on the Cloud
+## Getting Setup to Run on the cloud
 
 Contact scicomp to get your user specific credentials.
 
@@ -141,7 +141,7 @@ s3 =
 ```
 
 
-## Getting Tower
+## Getting Tower.nf
 
 You need to get a free [tower.nf](https://tower.nf) account to monitor you job in real time from anywhere. This is a must-have feature, but it take a couple of days to get authenticated. Once you have a tower token you can add the following to your config. Replace `YOUR TOKEN` with your actual token.
 
@@ -154,7 +154,7 @@ tower {
 ```
 
 
-## Understanding hello.nf
+## Understanding this hello.nf example
 
 There are a couple of additional things we can learn from inspecting even a simple 1-part workflow:
 
@@ -261,6 +261,32 @@ process {
 ```
 
 Note: in this case we specify that if the process fail, it should try again but with 1 GB more memory for each attempt. If you do this you must set the maxRetries to some reasonable number (e.g., 3).
+
+
+# Running a workflow hosted on Github
+
+In most real world cases you will run a nextflow workflow directly from a github repo. Here's an example of how to do that:
+
+if running locally:
+
+```
+nextflow run kmayerb/hello-nextflow -c configs/local.config
+```
+
+or with AWS batch:
+
+```
+nextflow run kmayerb/hello-nextflow \
+	--pub-dir s3://fh-pi-Simpson-M/scratch/testpub \
+	-c configs/aws.config \
+	-work-dir s3://fh-pi-Simpson-M/scratch/testwork \
+	-process.echo 
+```
+
+by default nextflow will run main.nf in the specified repo.
+
+
+
 
 
 ## Doing the same thing using nexflow DSL2

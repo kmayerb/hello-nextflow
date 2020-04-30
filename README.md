@@ -3,7 +3,7 @@
 ## Run Local
 
 ```bash
-nextflow run workflows/hello.nf -c configs/local.config -process.echo -resume
+nextflow run workflows/hello.nf -c configs/local.config -process.echo
 ```
 
 ## Run on the Cloud

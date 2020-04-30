@@ -138,15 +138,14 @@ process my_first_process {
 }
 ```
 
+* params - `params.x` can allow any number of `--x` to be passed to the nextflow in a run command or in a param.json file. We used it here to allow specification of the publishDir.
 * tag - using a tag allows one to provide more context 
 * label - using a label allows one to control the amount of resources to allocate to all processes with that label. In nextflow resources can be specified to process or labels.
 * container - this specifies the docker image that will serve as as the environment for this process. Each process can have its own container.
 * publishDir - the path were outputs from this process will be written. 
-* params - `params.x` can allow any number of `--x` to be passed to the nextflow in a run command or in a param.json file. We used it here to allow specification of the publishDir.
-* 
 
 
-# ONLY READ ON IF YOU WANT TO KNOW MORE
+# Advant
 
 ### Advanced Example: update your config to make use of label
 

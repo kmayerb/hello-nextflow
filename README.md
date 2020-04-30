@@ -25,11 +25,8 @@ nextflow run workflows/hello.nf \
 	-process.echo \
 ```
 
-nextflow run workflows/hello.nf \
-	--pub-dir s3://fh-pi-kublin-j-microbiome/scratch-delete30/testpub \
-	-c configs/aws.config \
-	-work-dir s3://fh-pi-kublin-j-microbiome/scratch-delete30/testwork\
-	-process.echo \
+Instead of using the commandline it is good practice to save your runs as a bash script. See `runs/run_hello.sh`.
+
 
 Hello world spun up and was finished in less than 2 minutes.
 
@@ -75,7 +72,7 @@ s3 =
 
 ## Getting Tower
 
-You need to get a free (tower.nf)[https://tower.nf] account to monitor you job in real time from anywhere. This is a must-have feature, but it take a couple of days to get authenticated. Once you have a tower token you can add the following to your config. Replace `YOUR TOKEN` with your actual token.
+You need to get a free [tower.nf](https://tower.nf) account to monitor you job in real time from anywhere. This is a must-have feature, but it take a couple of days to get authenticated. Once you have a tower token you can add the following to your config. Replace `YOUR TOKEN` with your actual token.
 
 
 ```

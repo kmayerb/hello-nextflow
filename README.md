@@ -106,8 +106,9 @@ tower {
 ```
 
 
-## A Couple of Additional Things we can learn from even this simple 1-Part workflow:
+## Understanding hello.nf
 
+There are a couple of additional things we can learn from inspecting even a simple 1-part workflow:
 
 ```groovy
 params.pub_dir = "results"
@@ -140,6 +141,80 @@ process my_first_process {
 * tag - using a tag allows one to provide more context 
 * label - using a label allows one to control the amount of resources to allocate to all processes with that label. In nextflow resources can be specified to process or labels.
 * container - this specifies the docker image that will serve as as the environment for this process. Each process can have its own container.
+* publishDir - the path were outputs from this process will be written. 
+* params - `params.x` can allow any number of `--x` to be passed to the nextflow in a run command or in a param.json file. We used it here to allow specification of the publishDir.
+* 
+
+
+# ONLY READ ON IF YOU WANT TO KNOW MORE
+
+### Advanced Example: update your config to make use of label
+
+```
+process.queue = 'cpu-spot-30'
+
+aws {
+    region = 'us-west-2'
+    batch {
+        cliPath = '/home/ec2-user/miniconda/bin/aws'
+        jobRole = 'arn:aws:iam::[IAM]:role/[ROLE]'
+        volumes = ['/docker_scratch:/tmp:rw']
+    }
+}
+
+docker {
+    enabled = true
+    temp = 'auto'
+}
+
+process {
+    withLabel: low_mem {
+        cpus = 1
+        memory = 1GB
+    }
+    withLabel: med_mem {
+        cpus = 2
+        memory = 4GB
+    }
+}
+```
+
+Note: all processes with the label 'low_mem' will only request 1 CPU and 1GB memory. 
+This can be very useful if you need to specify different computational resources for different sets of processes. 
+
+### Advanced Example 2: update your config to make use retry strategies and incremental resource escalation. 
+
+```
+process.queue = 'cpu-spot-30'
+
+aws {
+    region = 'us-west-2'
+    batch {
+        cliPath = '/home/ec2-user/miniconda/bin/aws'
+        jobRole = 'arn:aws:iam::[IAM]:role/[ROLE]'
+        volumes = ['/docker_scratch:/tmp:rw']
+    }
+}
+
+docker {
+    enabled = true
+    temp = 'auto'
+}
+
+
+process {
+    withLabel: 'low_mem' {
+        errorStrategy = {task.attempt <= 3 ? 'retry' : 'finish'}
+        memory = {1.GB * task.attempt}
+        maxRetries = 3
+        cpus = 2
+        time = {1.h * task.attempt}
+    }
+}
+```
+
+Note: in this case we specify that if the process fail, it should try again but with 1 GB more memory for each attempt. If you do this you must set the maxRetries to some reasonable number (e.g., 3).
+
 
 
 ## Doing the same thing using nexflow DSL2

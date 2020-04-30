@@ -73,7 +73,7 @@ CPU hours   : (a few seconds)
 Succeeded   : 1
 ```
 
-## Is anything happening.
+## Still waiting? Is anything happening?
 
 Some times you might just see this:
 
@@ -82,17 +82,20 @@ N E X T F L O W  ~  version 20.01.0
 Launching `workflows/hello.nf` [elegant_ride] - revision: 808173e715
 executor >  awsbatch (1)
 [84/48b400] process > my_first_process [  0%] 0 of 1
+
 ```
 
-Is anything happening? There is a quick way to check if your job is just waiting its turn politely:
+You might worry: 'is anything happening?' 
+
+There is a quick way to check if your job is just waiting its turn politely:
 
 ```bach
 ml awscli
 aws batch list-jobs --job-queue cpu-spot-20 --job-status RUNNABLE | grep -A 1 -B 1 my_first_process
 ```
 
+If your job is RUNNABLE and just waiting in the queue you should see this:
 
-If your job is waiting in the queue you should see this:
 ```
 "jobId": "2fc08c20-6a53-496a-ad2b-0ad1efc335e0",
 "jobName": "my_first_process_my_first_process",
@@ -105,7 +108,11 @@ You can find more info on your specific job, by typing the following using hte j
 aws batch describe-jobs --jobs 2fc08c20-6a53-496a-ad2b-0ad1efc335e0
 ```
 
-You can also check the status of the queues on the [Dashboard](https://batch-dashboard.fhcrc.org/). Even if a queue is not full, if you chose a spot queue the current spot pricing may not allow the job to be run immediately. If the jobs shows as runnable, go get a cup of coffee and check back on it later.
+You can also check the status of the queues on the [Dashboard](https://batch-dashboard.fhcrc.org/). 
+
+Even if your specified queue is not full, if you chose a spot queue and the current spot pricing is high, your job may not run immediately. 
+
+If your jobs shows up as runnable, go get a cup of coffee and check back on it later.
 
 
 ## Getting Setup to Run on the Cloud
